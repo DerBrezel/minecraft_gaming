@@ -14,13 +14,19 @@ public class Avatar : MonoBehaviour {
     [SerializeField]
     private float gravity;
     private Vector2 moveInput;
+    private Vector2 mouseInput;
     private bool grounded;
+    [SerializeField]
+    MouseLook mouseLook;
 
 
 
     private void Awake() {
         playerControls = new PlayerControls();
         myCC = GetComponent<CharacterController>();
+
+        playerControls.Player.MouseX.performed += ctx => mouseInput.x = ctx.ReadValue<float>();
+        playerControls.Player.MouseY.performed += ctx => mouseInput.y = ctx.ReadValue<float>();
     }
 
     private void OnEnable() {
@@ -63,6 +69,7 @@ public class Avatar : MonoBehaviour {
         moveInput.y += gravity * Time.deltaTime;
         myCC.Move(moveInput * Time.deltaTime);
 
+        mouseLook.ReceiveInput(mouseInput);
 
     }
 }
